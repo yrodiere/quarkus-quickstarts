@@ -1,4 +1,4 @@
-package org.acme.hibernate.orm;
+package org.acme.hibernate.orm.package1;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
