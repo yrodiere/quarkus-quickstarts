@@ -1,13 +1,7 @@
-package org.acme.hibernate.search.elasticsearch.model;
+package org.acme.hibernate.search.elasticsearch.otherpu;
 
 import java.util.List;
 import java.util.Objects;
-
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.NamedQuery;
-import jakarta.persistence.OneToMany;
 
 import org.hibernate.search.engine.backend.types.Sortable;
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.FullTextField;
@@ -16,10 +10,15 @@ import org.hibernate.search.mapper.pojo.mapping.definition.annotation.IndexedEmb
 import org.hibernate.search.mapper.pojo.mapping.definition.annotation.KeywordField;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntity;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
 
-@Entity
+@Entity(name = "Author2")
 @Indexed
-@NamedQuery(name = "Author.foo", query = "select a from Author a")
+@NamedQuery(name = "Author2.foo", query = "select a from Author2 a")
 public class Author extends PanacheEntity {
 
     @FullTextField(analyzer = "name")
