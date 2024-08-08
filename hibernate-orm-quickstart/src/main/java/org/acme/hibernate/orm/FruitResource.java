@@ -4,7 +4,12 @@ import java.util.List;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityGraph;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.DELETE;
@@ -36,8 +41,21 @@ public class FruitResource {
 
     @GET
     public List<Fruit> get() {
-        return entityManager.createNamedQuery("Fruits.findAll", Fruit.class)
-                .getResultList();
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+
+        final CriteriaQuery<Fruit> cqry = criteriaBuilder.createQuery(Fruit.class);
+        final Root<Fruit> fruitRoot = cqry.from(Fruit.class);
+        cqry.select(fruitRoot);
+
+        final TypedQuery<Fruit> qry = entityManager.createQuery(cqry);
+
+        final EntityGraph<Fruit> entityGraph = (EntityGraph<Fruit>) entityManager.getEntityGraph(Fruit.ENTITY_GRAPH_FIND_ALL);
+        qry.setHint("javax.persistence.fetchgraph", entityGraph);
+        //qry.setHint("jakarta.persistence.fetchgraph", entityGraph);
+
+        final List<Fruit> results = qry.getResultList();
+
+        return results;
     }
 
     @GET
