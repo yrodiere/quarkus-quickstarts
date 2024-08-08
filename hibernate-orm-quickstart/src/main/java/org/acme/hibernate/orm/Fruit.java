@@ -1,20 +1,24 @@
 package org.acme.hibernate.orm;
 
-import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.NamedQuery;
-import jakarta.persistence.QueryHint;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "known_fruits")
-@NamedQuery(name = "Fruits.findAll", query = "SELECT f FROM Fruit f ORDER BY f.name", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
-@Cacheable
+@NamedEntityGraph(name = Fruit.ENTITY_GRAPH_FIND_ALL, includeAllAttributes = false, attributeNodes = {
+        @NamedAttributeNode("name")
+})
 public class Fruit {
+
+    public static final String ENTITY_GRAPH_FIND_ALL = "Fruits.findAll";
 
     @Id
     @SequenceGenerator(name = "fruitsSequence", sequenceName = "known_fruits_id_seq", allocationSize = 1, initialValue = 10)
@@ -23,6 +27,9 @@ public class Fruit {
 
     @Column(length = 40, unique = true)
     private String name;
+
+    @OneToOne(mappedBy = "fruit", fetch = FetchType.LAZY)
+    private FruitDetail fruitDetail;
 
     public Fruit() {
     }
@@ -45,6 +52,14 @@ public class Fruit {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public FruitDetail getFruitDetail() {
+        return fruitDetail;
+    }
+
+    public void setFruitDetail(FruitDetail fruitDetail) {
+        this.fruitDetail = fruitDetail;
     }
 
 }
