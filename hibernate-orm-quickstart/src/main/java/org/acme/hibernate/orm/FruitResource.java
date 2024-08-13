@@ -23,6 +23,10 @@ import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
 import jakarta.ws.rs.ext.Provider;
 
+import org.hibernate.cfg.AvailableSettings;
+import org.hibernate.jpa.AvailableHints;
+import org.hibernate.jpa.QueryHints;
+
 import org.jboss.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,8 +54,7 @@ public class FruitResource {
         final TypedQuery<Fruit> qry = entityManager.createQuery(cqry);
 
         final EntityGraph<Fruit> entityGraph = (EntityGraph<Fruit>) entityManager.getEntityGraph(Fruit.ENTITY_GRAPH_FIND_ALL);
-        qry.setHint("javax.persistence.fetchgraph", entityGraph);
-        //qry.setHint("jakarta.persistence.fetchgraph", entityGraph);
+        qry.setHint(AvailableHints.HINT_SPEC_FETCH_GRAPH, entityGraph);
 
         final List<Fruit> results = qry.getResultList();
 
