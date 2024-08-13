@@ -11,6 +11,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "known_fruits")
 @NamedEntityGraph(name = Fruit.ENTITY_GRAPH_FIND_ALL, includeAllAttributes = false, attributeNodes = {
@@ -28,7 +30,7 @@ public class Fruit {
     @Column(length = 40, unique = true)
     private String name;
 
-    @OneToOne(mappedBy = "fruit", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "fruit", fetch = FetchType.EAGER)
     private FruitDetail fruitDetail;
 
     public Fruit() {
@@ -54,6 +56,7 @@ public class Fruit {
         this.name = name;
     }
 
+    @JsonIgnore
     public FruitDetail getFruitDetail() {
         return fruitDetail;
     }
