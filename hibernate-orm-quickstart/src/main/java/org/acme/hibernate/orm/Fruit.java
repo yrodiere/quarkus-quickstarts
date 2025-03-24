@@ -1,50 +1,63 @@
 package org.acme.hibernate.orm;
 
-import jakarta.persistence.Cacheable;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinColumns;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQuery;
-import jakarta.persistence.QueryHint;
-import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "known_fruits")
-@NamedQuery(name = "Fruits.findAll", query = "SELECT f FROM Fruit f ORDER BY f.name", hints = @QueryHint(name = "org.hibernate.cacheable", value = "true"))
-@Cacheable
-public class Fruit {
+@NamedQuery(name = "Fruits.findAll", query = "SELECT f FROM Fruit f ORDER BY f.seed.id")
+public class Fruit extends Plant {
 
-    @Id
-    @SequenceGenerator(name = "fruitsSequence", sequenceName = "known_fruits_id_seq", allocationSize = 1, initialValue = 10)
-    @GeneratedValue(generator = "fruitsSequence")
-    private Integer id;
+    @Column
+    @JsonIgnore
+    private Integer friendId;
 
-    @Column(length = 40, unique = true)
-    private String name;
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumns({
+        @JoinColumn(name = "friendId", referencedColumnName = "id", insertable = false, updatable = false, nullable = false)
+    })
+    private Flower friend;
 
     public Fruit() {
+        super(new Seed(), null);
     }
 
-    public Fruit(String name) {
-        this.name = name;
+    public Fruit(Seed seed, String name, Integer friendId) {
+        super(seed, name);
     }
 
-    public Integer getId() {
-        return id;
+    public Flower getFriend() {
+        return friend;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        Fruit other = (Fruit) obj;
+        if (seed == null) {
+            if (other.seed != null)
+                return false;
+        } else if (!seed.equals(other.seed))
+            return false;
+        return true;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    @Override
+    public String toString() {
+        return "Fruit [seed=" + seed + ", name=" + name + "]";
     }
 
 }
