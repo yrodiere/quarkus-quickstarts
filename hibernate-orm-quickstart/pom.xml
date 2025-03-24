@@ -12,7 +12,7 @@
         <quarkus.platform.group-id>io.quarkus</quarkus.platform.group-id>
         <quarkus.platform.version>999-SNAPSHOT</quarkus.platform.version>
         <surefire-plugin.version>3.1.2</surefire-plugin.version>
-        <compiler-plugin.version>3.11.0</compiler-plugin.version>
+        <compiler-plugin.version>3.12.1</compiler-plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.release>17</maven.compiler.release>
@@ -80,13 +80,12 @@
                         <arg>-parameters</arg>
                     </compilerArgs>
                     <annotationProcessors>
-                        <processor>org.hibernate.jpamodelgen.JPAMetaModelEntityProcessor</processor>
+                        <processor>org.hibernate.processor.HibernateProcessor</processor>
                     </annotationProcessors>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.hibernate.orm</groupId>
                             <artifactId>hibernate-jpamodelgen</artifactId>
-                            <version>6.6.0.Final</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
