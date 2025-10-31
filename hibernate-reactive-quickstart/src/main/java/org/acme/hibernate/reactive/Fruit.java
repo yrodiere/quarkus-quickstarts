@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.NamedQuery;
+import jakarta.validation.constraints.NotBlank;
+import org.hibernate.validator.constraints.Length;
 
 @Entity
 @NamedQuery(name = "Fruits.findAll", query = "SELECT f FROM Fruit f ORDER BY f.name")
@@ -14,7 +16,9 @@ public class Fruit {
     @GeneratedValue
     private Integer id;
 
-    @Column(length = 40, unique = true)
+    @Column(name = "something_name", nullable = false, updatable = false)
+    @NotBlank(message = "Should not be blank!")
+    @Length(max = 20, message = "Should be 20 chars max!")
     private String name;
 
     public Fruit() {

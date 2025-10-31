@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.acme</groupId>
     <artifactId>hibernate-reactive-quickstart</artifactId>
@@ -41,10 +39,9 @@
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-hibernate-reactive</artifactId>
         </dependency>
-        <!-- Hibernate Reactive uses the reactive-pg-client with PostgreSQL under the hood -->
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-reactive-pg-client</artifactId>
+            <artifactId>quarkus-reactive-oracle-client</artifactId>
         </dependency>
         <!-- We are using RESTEasy Reactive in this quickstart -->
         <dependency>
@@ -59,6 +56,10 @@
         </dependency>
 
         <!-- Testing -->
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-hibernate-validator</artifactId>
+        </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-junit5</artifactId>
@@ -176,12 +177,8 @@
                                         <pluginExecution>
                                             <pluginExecutionFilter>
                                                 <groupId>io.fabric8</groupId>
-                                                <artifactId>
-                                                    docker-maven-plugin
-                                                </artifactId>
-                                                <versionRange>
-                                                    [0.28.0,)
-                                                </versionRange>
+                                                <artifactId>docker-maven-plugin</artifactId>
+                                                <versionRange>[0.28.0,)</versionRange>
                                                 <goals>
                                                     <goal>start</goal>
                                                     <goal>stop</goal>
