@@ -6,7 +6,7 @@ with a front-end based on Angular so you can play with it from your browser.
 While the code is surprisingly simple, under the hood this is using:
  - RESTEasy to expose the REST endpoints
  - Hibernate ORM to perform the CRUD operations on the database
- - A PostgreSQL database; see below to run one via Docker
+ - A DB2 database; see below to run one via Docker
  - ArC, the CDI inspired dependency injection tool with zero overhead
  - The high performance Agroal connection pool
  - All safely coordinated by the Narayana Transaction Manager
@@ -18,7 +18,7 @@ To compile and run this demo you will need:
 - JDK 17+
 - GraalVM
 
-In addition, you will need either a PostgreSQL database, or Docker to run one.
+In addition, you will need either a DB2 database, or Docker to run one.
 
 ### Configuring GraalVM and JDK 17+
 
@@ -45,7 +45,7 @@ live coding. To try this out:
 
 In this mode you can make changes to the code and have the changes immediately applied, by just refreshing your browser.
 
-Dev Mode automatically starts a Docker container with a Postgres database. This feature is called ["Dev Services."](https://quarkus.io/guides/dev-services)
+Dev Mode automatically starts a Docker container with a DB2 database. This feature is called ["Dev Services."](https://quarkus.io/guides/dev-services)
 
 To access the database from the terminal, run:
 
@@ -63,19 +63,16 @@ conventional jar file.
 
 First compile it:
 
-> ./mvnw package
+> ./mvnw clean package
 
-Next, make sure you have a PostgreSQL database running. In production, Quarkus does not start a container for you like it does in Dev Mode.
-To set up a PostgreSQL database with Docker:
+Next, make sure you have a database running. In production, Quarkus does not start a container for you like it does in Dev Mode.
+To set up a database with Docker:
 
-> docker run -it --rm=true --name quarkus_test -e POSTGRES_USER=quarkus_test -e POSTGRES_PASSWORD=quarkus_test -e POSTGRES_DB=quarkus_test -p 5432:5432 postgres:13.3
+> docker run -it --rm=true --cap-add=IPC_LOCK --cap-add=IPC_OWNER --network=bridge --name quarkus_test -e LICENSE=accept -e PERSISTENT_HOME=false -e DB2INST1_PASSWORD=quarkus -e DBNAME=quarkus -e DB2INSTANCE=quarkus -e AUTOCONFIG=false -e ARCHIVE_LOGS=false -p 50000:50000 icr.io/db2_community/db2:12.1.0.0
 
-Connection properties for the Agroal datasource are defined in the standard Quarkus configuration file,
-`src/main/resources/application.properties`.
+But you can use the Quarkus tooling to run the application in production mode with dev services:
 
-Then run it:
-
-> java -jar ./target/quarkus-app/quarkus-run.jar
+> ./mvnw quarkus:run
 
     Have a look at how fast it boots.
     Or measure total native memory consumption...
@@ -105,7 +102,7 @@ After getting a cup of coffee, you'll be able to run this binary directly:
 
 N.B. This implies all dependencies have been compiled to native;
 that's a whole lot of stuff: from the bytecode enhancements that Hibernate ORM
-applies to your entities, to the lower level essential components such as the PostgreSQL JDBC driver, the Undertow webserver.
+applies to your entities, to the lower level essential components such as the JDBC driver.
 
 ## See the demo in your browser
 
@@ -114,14 +111,3 @@ Navigate to:
 <http://localhost:8080/index.html>
 
 Have fun, and join the team of contributors!
-
-## Running the demo in Kubernetes
-
-This section provides extra information for running both the database and the demo on Kubernetes.
-As well as running the DB on Kubernetes, a service needs to be exposed for the demo to connect to the DB.
-
-Then, rebuild demo docker image with a system property that points to the DB. 
-
-```bash
--Dquarkus.datasource.jdbc.url=jdbc:postgresql://<DB_SERVICE_NAME>/quarkus_test
-```
